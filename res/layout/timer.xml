@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal" >
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/display"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/startbtn"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="34dp"
+        android:gravity="center"
+        android:text="00:00:00"
+        android:textSize="60sp" />
+
+    <Button
+        android:id="@+id/startbtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="60dp"
+        android:layout_marginLeft="50dp"
+        android:gravity="center"
+        android:text="Start" />
+
+    <Button
+        android:id="@+id/pausebtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/startbtn"
+        android:layout_alignBottom="@+id/startbtn"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="50dp"
+        android:gravity="center"
+        android:text="Pause" />
+
+    <TextView
+        android:id="@+id/TextView01"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/linearLayout1"
+        android:gravity="center"
+        android:text="@string/mainRevision"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/noOfMinutesRevision"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/TextView01"
+        android:layout_toLeftOf="@+id/RevisionNum"
+        android:ems="10"
+        android:hint="Minutes"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/RevisionNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/noOfMinutesRevision"
+        android:layout_alignBottom="@+id/noOfMinutesRevision"
+        android:layout_alignLeft="@+id/pausebtn"
+        android:ems="10"
+        android:hint="Number"
+        android:inputType="number" >
+
+    </EditText>
+
+    <TextView
+        android:id="@+id/TextView02"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/noOfMinutesRevision"
+        android:layout_marginTop="14dp"
+        android:gravity="center"
+        android:text="Breaks"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/noOfMinutesBreak"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/noOfMinutesRevision"
+        android:layout_below="@+id/TextView02"
+        android:ems="10"
+        android:hint="Minutes"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/BreakNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/noOfMinutesBreak"
+        android:layout_alignBottom="@+id/noOfMinutesBreak"
+        android:layout_alignLeft="@+id/RevisionNum"
+        android:layout_alignParentRight="true"
+        android:ems="10"
+        android:hint="Number"
+        android:inputType="number" />
+
+    <Button
+        android:id="@+id/testAllButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/noOfMinutesBreak"
+        android:layout_marginTop="18dp"
+        android:layout_toRightOf="@+id/startbtn"
+        android:text="Start All" />
+
+</RelativeLayout>
