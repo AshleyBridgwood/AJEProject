@@ -18,6 +18,7 @@ public class Timer extends Activity{
 
 	private static Button mainButton;
 	private Button pauseButton;
+	private Button startAll;
 	private boolean running;
 	private boolean finishedLoop;
 	private static TextView display;
@@ -34,6 +35,8 @@ public class Timer extends Activity{
 	private boolean DoNotRun;
 	private MainTimer timer;
 	private static Vibrator v;
+	private int[] loopArray;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +47,7 @@ public class Timer extends Activity{
 		mainButton = (Button) findViewById(R.id.startbtn);
 		pauseButton = (Button) findViewById(R.id.pausebtn);
 		display = (TextView) findViewById(R.id.display);
+		startAll = (Button) findViewById(R.id.testAllButton);
 		
 		//Select the values from the input boxes - F: timer.xml
 		noOfMinutesRevision = (EditText) findViewById(R.id.noOfMinutesRevision);
@@ -114,12 +118,62 @@ public class Timer extends Activity{
 				Toast.makeText(getApplicationContext(), "Error: Ash didn't implement this yet", Toast.LENGTH_LONG).show();
 			}
 		});
+		
+		startAll.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View arg0) {
+				numMinutesRevision = (int)Integer.valueOf(noOfMinutesRevision.getText().toString());
+				numLoopRevision = (int)Integer.valueOf(noOfLoopRevision.getText().toString());
+				
+				timerValueRevision = (numMinutesRevision * 60) * 1000;
+				
+				if(running == false){
+					//Start the timer
+					setRevisionTimer(timerValueRevision, "Timer Stopped");
+					timer.start();
+					running = true;
+					mainButton.setText("Stop");
+					Toast.makeText(getApplicationContext(), "Timer Started", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getApplicationContext(), "Ash test: " + numLoopRevision, Toast.LENGTH_SHORT).show();
+					clearInputBoxes();
+				} else {
+					timer.cancel();
+					running = false;
+					display.setText("00:00:00");
+				}
+			}
+		});
 
 	}
 	
 	/** Set the count down timer with the value */
 	private void setTimer(){
 		timer = new MainTimer(timerValueRevision, 500, "Timer Stopped");
+	}
+	
+	private void attemptStartTimer(){
+		
+		//Work out the total size of the array
+		int totalNum = (numLoopRevision * 2) - 1;
+		
+		//Set the array size
+		loopArray = new int[totalNum];
+		System.out.println(totalNum);
+		
+		
+		for(int i = 0; i < numLoopRevision; i++){
+			loopArray[i] = numMinutesRevision;
+			loopArray[i+1] = 1000;
+		}
+
+	}
+	
+	public void setRevisionTimer(long length, String v){
+		timer = new MainTimer(length, 500, v);
+	}
+	
+	public void setBreakTimer(long length, String v){
+		timer = new MainTimer(length, 500, v);
 	}
 	
 	private void clearInputBoxes(){

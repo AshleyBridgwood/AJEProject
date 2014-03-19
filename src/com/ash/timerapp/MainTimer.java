@@ -7,16 +7,17 @@ import android.os.CountDownTimer;
 import android.os.Vibrator;
 
 public class MainTimer extends CountDownTimer{
-	private boolean status;
+	private boolean timerRunning;
 
 	public MainTimer(long startTime, int vibrateLength, String message) {
 		super(startTime, 1000);
-		status = false;
+		timerRunning = true;
 	}
 
 	@Override
 	//Set what happens once the timer has finished it's countdown
 	public void onFinish() {
+		timerRunning = false;
 		Timer.vibrate(500);
 		Timer.editMainButton("Start");
 		Timer.editDisplay("00:00:00");
@@ -33,16 +34,16 @@ public class MainTimer extends CountDownTimer{
 		TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(mils)));   
 		//Check if the loop has finished - Used for the pause
 		if(answer.equals("00:00:00")){
-			status = true;
+			timerRunning = false;
 		}
 		//Update the text field which shows the numbers counting down
 		Timer.editDisplay(answer);
 		
 	}
 	
-	public boolean timerFinished(){
+	public boolean isTimerRunning(){
 		
-		return status;
+		return timerRunning;
 	}
 }
 
