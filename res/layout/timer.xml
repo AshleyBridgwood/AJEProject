@@ -114,13 +114,15 @@
         android:hint="Number"
         android:inputType="number" />
 
-    <Button
-        android:id="@+id/testAllButton"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/TextStatus"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:layout_below="@+id/noOfMinutesBreak"
-        android:layout_marginTop="18dp"
-        android:layout_toRightOf="@+id/startbtn"
-        android:text="Start All" />
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="Revision Timer"
+        android:textSize="20sp" />
 
 </RelativeLayout>

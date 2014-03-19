@@ -27,6 +27,7 @@ public final class R {
     public static final class id {
         public static final int BreakNum=0x7f08000d;
         public static final int RevisionNum=0x7f08000a;
+        public static final int TextStatus=0x7f08000e;
         public static final int TextView01=0x7f080008;
         public static final int TextView02=0x7f08000b;
         public static final int action_settings=0x7f08000f;
@@ -39,7 +40,6 @@ public final class R {
         public static final int pausebtn=0x7f080007;
         public static final int progressBar1=0x7f080003;
         public static final int startbtn=0x7f080006;
-        public static final int testAllButton=0x7f08000e;
         public static final int textView1=0x7f080000;
     }
     public static final class layout {

@@ -15,28 +15,37 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class Timer extends Activity{
-
+	
 	private static Button mainButton;
-	private Button pauseButton;
-	private Button startAll;
-	private boolean running;
-	private boolean finishedLoop;
+	private static Button pauseButton;
+	
+	private static boolean running;
+	private boolean DoNotRun;
+	private boolean paused;
+	
 	private static TextView display;
+	private static TextView timerTextStatus;
+	
 	private EditText noOfMinutesRevision;
 	private EditText noOfLoopRevision;
 	private EditText noOfMinutesBreak;
 	private EditText noOfLoopBreak;
-	private int numMinutesRevision;
-	private int numMinutesBreak;
-	private int numLoopRevision;
-	private int numLoopBreak;
-	private long timerValueRevision;
-	private long timerValueBreak;
-	private boolean DoNotRun;
-	private MainTimer timer;
-	private static Vibrator v;
-	private int[] loopArray;
+
+	private static long timerValueRevision;
+	private static long timerValueBreak;
 	
+	private static MainTimer timer;
+	private static Vibrator v;
+	
+	private static int numMinutesBreak;
+	private static int status;
+	private static int timerLimit;
+	private static int timerCount;
+	private int numLoopRevision;
+	private int numBreak;
+	private int numMinutesRevision;
+	
+	private String currentTimeLeft;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +56,7 @@ public class Timer extends Activity{
 		mainButton = (Button) findViewById(R.id.startbtn);
 		pauseButton = (Button) findViewById(R.id.pausebtn);
 		display = (TextView) findViewById(R.id.display);
-		startAll = (Button) findViewById(R.id.testAllButton);
+		timerTextStatus = (TextView) findViewById(R.id.TextStatus);
 		
 		//Select the values from the input boxes - F: timer.xml
 		noOfMinutesRevision = (EditText) findViewById(R.id.noOfMinutesRevision);
@@ -55,14 +64,14 @@ public class Timer extends Activity{
 		noOfMinutesBreak = (EditText) findViewById(R.id.noOfMinutesBreak);
 		noOfLoopBreak = (EditText) findViewById(R.id.BreakNum);
 		running = false;
+		timerCount = 0;
 
 		v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-		
 		mainButton.setOnClickListener(new View.OnClickListener(){
 			
 			public void onClick(View v) {
 				//Check to make sure the input boxes are not empty
-
+				if(running == false){
 					if(isEmpty(noOfMinutesRevision) || isEmpty(noOfLoopRevision) || isEmpty(noOfMinutesBreak) || isEmpty(noOfLoopBreak) == true){
 						//If any of the input boxes are empty, show error message, stop timer from being created
 						Toast.makeText(getApplicationContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
@@ -71,7 +80,6 @@ public class Timer extends Activity{
 						//If all input boxes have been pressed, allow the timer to be created below.
 						DoNotRun = false;
 					}
-				
 				
 				//Force close the keyboard incase the user has not	
 				closeKeyboard();
@@ -88,16 +96,18 @@ public class Timer extends Activity{
 					//timerValue = (((numHours * 60) * 60) + ((numMinutesRevision * 60) + numSeconds)) * 1000;
 					timerValueRevision = (numMinutesRevision * 60) * 1000;
 					timerValueBreak = (numMinutesBreak * 60) * 1000;
-				
+					
+					if(numLoopRevision == 0){
+						timerLimit = 1;
+					} else {
+						timerLimit = (numLoopRevision * 2) - 1;
+					}
+					
 					if(timerValueRevision > 0){
 						if(running == false){
 							//Start the timer
-							setTimer();
-							timer.start();
-							running = true;
-							mainButton.setText("Stop");
+							startNextTimer(0);
 							Toast.makeText(getApplicationContext(), "Timer Started", Toast.LENGTH_SHORT).show();
-							Toast.makeText(getApplicationContext(), "Ash test: " + numLoopRevision, Toast.LENGTH_SHORT).show();
 							clearInputBoxes();
 						} else {
 							timer.cancel();
@@ -109,41 +119,60 @@ public class Timer extends Activity{
 						Toast.makeText(getApplicationContext(), "You have not given any values", Toast.LENGTH_LONG).show();
 					}
 				}//End of DoNotRun if statement - only do not run when not all values have been stated
+				} else {
+					timer.cancel();
+					display.setText("00:00:00");
+					mainButton.setText("Start");
+					running = false;
+				}
 			}//End of onClick listener
 		});
 		
+		//What happens when the pause button is clicked
 		pauseButton.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v){
-				Toast.makeText(getApplicationContext(), "Error: Ash didn't implement this yet", Toast.LENGTH_LONG).show();
-			}
-		});
-		
-		startAll.setOnClickListener(new View.OnClickListener() {
-			
-			public void onClick(View arg0) {
-				numMinutesRevision = (int)Integer.valueOf(noOfMinutesRevision.getText().toString());
-				numLoopRevision = (int)Integer.valueOf(noOfLoopRevision.getText().toString());
-				
-				timerValueRevision = (numMinutesRevision * 60) * 1000;
-				
-				if(running == false){
-					//Start the timer
-					setRevisionTimer(timerValueRevision, "Timer Stopped");
-					timer.start();
-					running = true;
-					mainButton.setText("Stop");
-					Toast.makeText(getApplicationContext(), "Timer Started", Toast.LENGTH_SHORT).show();
-					Toast.makeText(getApplicationContext(), "Ash test: " + numLoopRevision, Toast.LENGTH_SHORT).show();
-					clearInputBoxes();
+				if(running == true){
+					if(paused == false){
+						currentTimeLeft = MainTimer.getCurrentTimeLeft();
+						timer.cancel();
+						pauseButton.setText("Restart");
+					} else {
+						setShortToast("Currently not implemented - Ash");
+					}
 				} else {
-					timer.cancel();
-					running = false;
-					display.setText("00:00:00");
+					setShortToast("You have not started a timer yet!");
 				}
 			}
 		});
+	}
+	
+	public static void startNextTimer(int v){
+		//0 = revision, 1 = break
+		if(timerCount < timerLimit){
+			if(v == 0){
+				timerCount++;
+				setRevisionTimer(timerValueRevision, "Revision Stopped");
+				timerTextStatus.setText("Revision");
+				timer.start();
+				running = true;
+				status = 1;
+				mainButton.setText("Stop");
+			} else if(v == 1){
+				timerCount++;
+				setBreakTimer(timerValueBreak, "Break Stopped");
+				timerTextStatus.setText("Break");
+				timer.start();
+				running = true;
+				status = 0;
+				mainButton.setText("Stop");	
+				
+			}
+		} else {
 
+			display.setText("00:00:00");
+			mainButton.setText("Start");
+		}
 	}
 	
 	/** Set the count down timer with the value */
@@ -151,28 +180,15 @@ public class Timer extends Activity{
 		timer = new MainTimer(timerValueRevision, 500, "Timer Stopped");
 	}
 	
-	private void attemptStartTimer(){
-		
-		//Work out the total size of the array
-		int totalNum = (numLoopRevision * 2) - 1;
-		
-		//Set the array size
-		loopArray = new int[totalNum];
-		System.out.println(totalNum);
-		
-		
-		for(int i = 0; i < numLoopRevision; i++){
-			loopArray[i] = numMinutesRevision;
-			loopArray[i+1] = 1000;
-		}
-
+	public static int getCurrentStatus(){
+		return status;
 	}
 	
-	public void setRevisionTimer(long length, String v){
+	public static void setRevisionTimer(long length, String v){
 		timer = new MainTimer(length, 500, v);
 	}
 	
-	public void setBreakTimer(long length, String v){
+	public static void setBreakTimer(long length, String v){
 		timer = new MainTimer(length, 500, v);
 	}
 	
@@ -201,6 +217,10 @@ public class Timer extends Activity{
 	public void closeKeyboard(){
 		final InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+	}
+	
+	public void setShortToast(String t){
+		Toast.makeText(getApplicationContext(), t, Toast.LENGTH_SHORT).show();
 	}
 	
 	public static void editMainButton(String text){
