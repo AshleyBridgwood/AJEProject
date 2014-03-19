@@ -35,6 +35,7 @@ public final class R {
         public static final int bSub=0x7f080002;
         public static final int display=0x7f080005;
         public static final int linearLayout1=0x7f080004;
+        public static final int menu_about=0x7f080010;
         public static final int noOfMinutesBreak=0x7f08000c;
         public static final int noOfMinutesRevision=0x7f080009;
         public static final int pausebtn=0x7f080007;
@@ -53,9 +54,10 @@ public final class R {
     public static final class string {
         public static final int action_settings=0x7f050001;
         public static final int app_name=0x7f050000;
-        public static final int entertimeinseconds=0x7f050003;
+        public static final int entertimeinseconds=0x7f050004;
         public static final int hello_world=0x7f050002;
-        public static final int mainRevision=0x7f050004;
+        public static final int mainRevision=0x7f050005;
+        public static final int menu_about=0x7f050003;
     }
     public static final class style {
         /** 
