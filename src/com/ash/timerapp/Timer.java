@@ -19,7 +19,7 @@ public class Timer extends Activity{
 	
 	private static Button mainButton;
 	private static Button pauseButton;
-	
+	//
 	private static boolean running;
 	private boolean DoNotRun;
 	private boolean paused;
