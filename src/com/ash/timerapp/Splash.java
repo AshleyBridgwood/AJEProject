@@ -18,7 +18,7 @@ public class Splash extends Activity {
 				} catch (InterruptedException e){
 					e.printStackTrace();
 				} finally{
-					Intent openStartingPoint = new Intent("com.ash.timerapp.MENU");
+					Intent openStartingPoint = new Intent("com.ash.timerapp.TIMER");
 					startActivity(openStartingPoint);
 				}
 			}

@@ -4,6 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.Menu;
@@ -45,13 +46,16 @@ public class Timer extends Activity{
 	private int numBreak;
 	private int numMinutesRevision;
 	
-	private String currentTimeLeft;
+	private static MediaPlayer mediaPlayer;
+	
+	private long currentTimeLeft;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.timer);
 		
+		mediaPlayer = MediaPlayer.create(this, R.raw.beep);
 		//get the values from the input boxes - F: timer.xml
 		mainButton = (Button) findViewById(R.id.startbtn);
 		pauseButton = (Button) findViewById(R.id.pausebtn);
@@ -63,10 +67,14 @@ public class Timer extends Activity{
 		noOfLoopRevision = (EditText) findViewById(R.id.RevisionNum);
 		noOfMinutesBreak = (EditText) findViewById(R.id.noOfMinutesBreak);
 		noOfLoopBreak = (EditText) findViewById(R.id.BreakNum);
+		
+		//set the initial values
 		running = false;
 		timerCount = 0;
-
+		
 		v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+		
+		//Listener to check if the mainButton has been clicked
 		mainButton.setOnClickListener(new View.OnClickListener(){
 			
 			public void onClick(View v) {
@@ -123,6 +131,7 @@ public class Timer extends Activity{
 					timer.cancel();
 					display.setText("00:00:00");
 					mainButton.setText("Start");
+					pauseButton.setText("Pause");
 					running = false;
 				}
 			}//End of onClick listener
@@ -136,9 +145,15 @@ public class Timer extends Activity{
 					if(paused == false){
 						currentTimeLeft = MainTimer.getCurrentTimeLeft();
 						timer.cancel();
+						setShortToast("Timer Paused");
 						pauseButton.setText("Restart");
+						paused = true;
 					} else {
-						setShortToast("Currently not implemented - Ash");
+						setTimer(currentTimeLeft, "Timer Started");
+						timer.start();
+						pauseButton.setText("Pause");
+						setShortToast("Timer Restarted");
+						paused = false;
 					}
 				} else {
 					setShortToast("You have not started a timer yet!");
@@ -147,6 +162,8 @@ public class Timer extends Activity{
 		});
 	}
 	
+	//Starts the next timer, checks what timer is next to be displayed, checks if
+	//the limit has been reached and displays
 	public static void startNextTimer(int v){
 		//0 = revision, 1 = break
 		if(timerCount < timerLimit){
@@ -155,43 +172,62 @@ public class Timer extends Activity{
 				setRevisionTimer(timerValueRevision, "Revision Stopped");
 				timerTextStatus.setText("Revision");
 				timer.start();
-				running = true;
-				status = 1;
+				setTimerVariables(true, 1);
 				mainButton.setText("Stop");
 			} else if(v == 1){
 				timerCount++;
 				setBreakTimer(timerValueBreak, "Break Stopped");
 				timerTextStatus.setText("Break");
 				timer.start();
-				running = true;
-				status = 0;
+				setTimerVariables(true, 0);
 				mainButton.setText("Stop");	
 				
 			}
 		} else {
 
 			display.setText("00:00:00");
-			mainButton.setText("Start");
+			mainButton.setText("Reset");
+			timerCount = 0;
+			timerTextStatus.setText("Timer Ended");
 		}
 	}
 	
-	/** Set the count down timer with the value */
-	private void setTimer(){
-		timer = new MainTimer(timerValueRevision, 500, "Timer Stopped");
+	private static void setTimerVariables(boolean r, int s){
+		running = r;
+		status = s;
 	}
-	
 	public static int getCurrentStatus(){
 		return status;
 	}
 	
-	public static void setRevisionTimer(long length, String v){
+	/**
+	 * Set the revision timer values
+	 * 
+	 * @param length timer value used to set the timer
+	 * @param v the text to be used once the timer has finished
+	 */
+	private static void setRevisionTimer(long length, String v){
 		timer = new MainTimer(length, 500, v);
 	}
 	
-	public static void setBreakTimer(long length, String v){
+	/**
+	 * Set break timer values
+	 * 
+	 * @param length timer value used to set the timer
+	 * @param v the text to be used once the timer has finished
+	 */
+	private static void setBreakTimer(long length, String v){
 		timer = new MainTimer(length, 500, v);
 	}
 	
+	private static void setTimer(long length, String v){
+		timer = new MainTimer(length, 500, v);
+	}
+	
+	/**
+	 * Clears all of the data from the input boxes
+	 * Will only clear the boxes which are specified in the method
+	 */
 	private void clearInputBoxes(){
 		noOfMinutesRevision.setText("");
 		noOfLoopRevision.setText("");
@@ -233,6 +269,10 @@ public class Timer extends Activity{
 	
 	public static void vibrate(int length){
 		v.vibrate(length);
+	}
+	
+	public static void playSound(){
+		mediaPlayer.start();
 	}
 	
 }

@@ -3,13 +3,16 @@ package com.ash.timerapp;
 import java.util.concurrent.TimeUnit;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.os.CountDownTimer;
-import android.os.Vibrator;
 
 public class MainTimer extends CountDownTimer{
 	private boolean timerRunning;
 	private int status;
 	private static String answer;
+	private static long currentTimeLeft;
+
+	private MediaPlayer mPlayer;
 
 	public MainTimer(long startTime, int vibrateLength, String message) {
 		super(startTime, 1000);
@@ -22,6 +25,7 @@ public class MainTimer extends CountDownTimer{
 	public void onFinish() {
 		timerRunning = false;
 		Timer.vibrate(500);
+		Timer.playSound();
 		if(status == 0){
 			Timer.startNextTimer(1);
 		}
@@ -39,6 +43,7 @@ public class MainTimer extends CountDownTimer{
 	@Override
 	//What happens on every tick in the countdown
 	public void onTick(long mils) {
+		currentTimeLeft = mils;
 		answer = String.format("%02d:%02d:%02d", 
 		TimeUnit.MILLISECONDS.toHours(mils),
 		TimeUnit.MILLISECONDS.toMinutes(mils) -  
@@ -54,8 +59,8 @@ public class MainTimer extends CountDownTimer{
 		
 	}
 	
-	public static String getCurrentTimeLeft(){
-		return answer;
+	public static long getCurrentTimeLeft(){
+		return currentTimeLeft;
 	}
 	
 	public boolean isTimerRunning(){
