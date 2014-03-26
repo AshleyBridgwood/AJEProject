@@ -13,19 +13,26 @@ public class MainTimer extends CountDownTimer{
 	private static long currentTimeLeft;
 
 	private MediaPlayer mPlayer;
+	
+	private int timerType;
 
-	public MainTimer(long startTime, int vibrateLength, String message) {
+	public MainTimer(long startTime, int vibrateLength, int timer) {
+		//timer 0 = revision || timer 1 = totalTimer
 		super(startTime, 1000);
 		timerRunning = true;
 		status = Timer.getCurrentStatus();
+		timerType = timer;
+		
 	}
 
 	@Override
 	//Set what happens once the timer has finished it's countdown
 	public void onFinish() {
 		timerRunning = false;
-		Timer.vibrate(500);
-		Timer.playSound();
+		if(timerType == 0){
+			Timer.vibrate(500);
+			Timer.playSound();
+		}
 		if(status == 0){
 			Timer.startNextTimer(1);
 		}
@@ -55,7 +62,11 @@ public class MainTimer extends CountDownTimer{
 			timerRunning = false;	
 		}
 		//Update the text field which shows the numbers counting down
-		Timer.editDisplay(answer);
+		if(timerType == 0){
+			Timer.editDisplay(answer);
+		} else if(timerType == 1){
+			Timer.editTimeTimeDisplay(answer);
+		}
 		
 	}
 	

@@ -25,6 +25,7 @@ public class Timer extends Activity{
 	private boolean paused;
 	
 	private static TextView display;
+	private static TextView totalTimerDisplay;
 	private static TextView timerTextStatus;
 	
 	private EditText noOfMinutesRevision;
@@ -36,6 +37,8 @@ public class Timer extends Activity{
 	private static long timerValueBreak;
 	
 	private static MainTimer timer;
+	private static MainTimer totalTimer;
+	
 	private static Vibrator v;
 	
 	private static int numMinutesBreak;
@@ -49,6 +52,7 @@ public class Timer extends Activity{
 	private static MediaPlayer mediaPlayer;
 	
 	private long currentTimeLeft;
+	private long totalTime;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +64,7 @@ public class Timer extends Activity{
 		mainButton = (Button) findViewById(R.id.startbtn);
 		pauseButton = (Button) findViewById(R.id.pausebtn);
 		display = (TextView) findViewById(R.id.display);
+		totalTimerDisplay = (TextView) findViewById(R.id.TotalTime);
 		timerTextStatus = (TextView) findViewById(R.id.TextStatus);
 		
 		//Select the values from the input boxes - F: timer.xml
@@ -105,6 +110,8 @@ public class Timer extends Activity{
 					timerValueRevision = (numMinutesRevision * 60) * 1000;
 					timerValueBreak = (numMinutesBreak * 60) * 1000;
 					
+					totalTime = timerValueRevision * numLoopRevision;
+					
 					if(numLoopRevision == 0){
 						timerLimit = 1;
 					} else {
@@ -149,7 +156,10 @@ public class Timer extends Activity{
 						pauseButton.setText("Restart");
 						paused = true;
 					} else {
-						setTimer(currentTimeLeft, "Timer Started");
+						startTotalTimer(totalTime);
+						totalTimer.start();
+						setTimer(currentTimeLeft);
+						
 						timer.start();
 						pauseButton.setText("Pause");
 						setShortToast("Timer Restarted");
@@ -169,14 +179,14 @@ public class Timer extends Activity{
 		if(timerCount < timerLimit){
 			if(v == 0){
 				timerCount++;
-				setRevisionTimer(timerValueRevision, "Revision Stopped");
+				setRevisionTimer(timerValueRevision);
 				timerTextStatus.setText("Revision");
 				timer.start();
 				setTimerVariables(true, 1);
 				mainButton.setText("Stop");
 			} else if(v == 1){
 				timerCount++;
-				setBreakTimer(timerValueBreak, "Break Stopped");
+				setBreakTimer(timerValueBreak);
 				timerTextStatus.setText("Break");
 				timer.start();
 				setTimerVariables(true, 0);
@@ -186,6 +196,7 @@ public class Timer extends Activity{
 		} else {
 
 			display.setText("00:00:00");
+			totalTimerDisplay.setText("00:00:00");
 			mainButton.setText("Reset");
 			timerCount = 0;
 			timerTextStatus.setText("Timer Ended");
@@ -206,8 +217,8 @@ public class Timer extends Activity{
 	 * @param length timer value used to set the timer
 	 * @param v the text to be used once the timer has finished
 	 */
-	private static void setRevisionTimer(long length, String v){
-		timer = new MainTimer(length, 500, v);
+	private static void setRevisionTimer(long length){
+		timer = new MainTimer(length, 500, 0);
 	}
 	
 	/**
@@ -216,12 +227,16 @@ public class Timer extends Activity{
 	 * @param length timer value used to set the timer
 	 * @param v the text to be used once the timer has finished
 	 */
-	private static void setBreakTimer(long length, String v){
-		timer = new MainTimer(length, 500, v);
+	private static void setBreakTimer(long length){
+		timer = new MainTimer(length, 500, 0);
 	}
 	
-	private static void setTimer(long length, String v){
-		timer = new MainTimer(length, 500, v);
+	private static void setTimer(long length){
+		timer = new MainTimer(length, 500, 0);
+	}
+	
+	private void startTotalTimer(long length){
+		totalTimer = new MainTimer(length, 500, 1);
 	}
 	
 	/**
@@ -265,6 +280,10 @@ public class Timer extends Activity{
 	
 	public static void editDisplay(String text){
 		display.setText(text);
+	}
+	
+	public static void editTimeTimeDisplay(String text){
+		totalTimerDisplay.setText(text);
 	}
 	
 	public static void vibrate(int length){

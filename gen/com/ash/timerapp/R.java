@@ -30,12 +30,13 @@ public final class R {
         public static final int TextStatus=0x7f09000e;
         public static final int TextView01=0x7f090008;
         public static final int TextView02=0x7f09000b;
-        public static final int action_settings=0x7f09000f;
+        public static final int TotalTime=0x7f09000f;
+        public static final int action_settings=0x7f090010;
         public static final int bAdd=0x7f090001;
         public static final int bSub=0x7f090002;
         public static final int display=0x7f090005;
         public static final int linearLayout1=0x7f090004;
-        public static final int menu_about=0x7f090010;
+        public static final int menu_about=0x7f090011;
         public static final int noOfMinutesBreak=0x7f09000c;
         public static final int noOfMinutesRevision=0x7f090009;
         public static final int pausebtn=0x7f090007;

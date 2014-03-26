@@ -125,4 +125,14 @@
         android:text="Revision Timer"
         android:textSize="20sp" />
 
+    <TextView
+        android:id="@+id/TotalTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:gravity="center"
+        android:text="00:00:00"
+        android:textSize="20sp" />
+
 </RelativeLayout>
