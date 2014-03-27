@@ -11,6 +11,7 @@ public class MainTimer extends CountDownTimer{
 	private int status;
 	private static String answer;
 	private static long currentTimeLeft;
+	private static long currentTotalTimeLeft;
 
 	private MediaPlayer mPlayer;
 	
@@ -50,7 +51,12 @@ public class MainTimer extends CountDownTimer{
 	@Override
 	//What happens on every tick in the countdown
 	public void onTick(long mils) {
-		currentTimeLeft = mils;
+		if(timerType == 0){
+			currentTimeLeft = mils;
+		} else if(timerType == 1){
+			currentTotalTimeLeft = mils;
+		}
+		
 		answer = String.format("%02d:%02d:%02d", 
 		TimeUnit.MILLISECONDS.toHours(mils),
 		TimeUnit.MILLISECONDS.toMinutes(mils) -  
@@ -72,6 +78,10 @@ public class MainTimer extends CountDownTimer{
 	
 	public static long getCurrentTimeLeft(){
 		return currentTimeLeft;
+	}
+	
+	public static long getCurrentTotalTimeLeft(){
+		return currentTotalTimeLeft;
 	}
 	
 	public boolean isTimerRunning(){

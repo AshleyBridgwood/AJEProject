@@ -52,6 +52,7 @@ public class Timer extends Activity{
 	private static MediaPlayer mediaPlayer;
 	
 	private long currentTimeLeft;
+	private long currentTotalTimeLeft;
 	private long totalTime;
 	
 	@Override
@@ -110,8 +111,7 @@ public class Timer extends Activity{
 					timerValueRevision = (numMinutesRevision * 60) * 1000;
 					timerValueBreak = (numMinutesBreak * 60) * 1000;
 					
-					totalTime = timerValueRevision * numLoopRevision;
-					
+					totalTime = (timerValueRevision * numLoopRevision) + (timerValueBreak * (numLoopRevision - 1));
 					if(numLoopRevision == 0){
 						timerLimit = 1;
 					} else {
@@ -122,12 +122,16 @@ public class Timer extends Activity{
 						if(running == false){
 							//Start the timer
 							startNextTimer(0);
+							startTotalTimer(totalTime);
+							totalTimer.start();
 							Toast.makeText(getApplicationContext(), "Timer Started", Toast.LENGTH_SHORT).show();
 							clearInputBoxes();
 						} else {
 							timer.cancel();
+							totalTimer.cancel();
 							running = false;
 							display.setText("00:00:00");
+							totalTimerDisplay.setText("00:00:00");
 						}
 
 					} else {
@@ -135,8 +139,13 @@ public class Timer extends Activity{
 					}
 				}//End of DoNotRun if statement - only do not run when not all values have been stated
 				} else {
+					//Cancel main timer
 					timer.cancel();
 					display.setText("00:00:00");
+					//Cancel total Timer
+					totalTimer.cancel();
+					totalTimerDisplay.setText("00:00:00");
+					//Set other parts
 					mainButton.setText("Start");
 					pauseButton.setText("Pause");
 					running = false;
@@ -151,12 +160,14 @@ public class Timer extends Activity{
 				if(running == true){
 					if(paused == false){
 						currentTimeLeft = MainTimer.getCurrentTimeLeft();
+						currentTotalTimeLeft = MainTimer.getCurrentTotalTimeLeft();
 						timer.cancel();
+						totalTimer.cancel();
 						setShortToast("Timer Paused");
 						pauseButton.setText("Restart");
 						paused = true;
 					} else {
-						startTotalTimer(totalTime);
+						startTotalTimer(currentTotalTimeLeft);
 						totalTimer.start();
 						setTimer(currentTimeLeft);
 						
