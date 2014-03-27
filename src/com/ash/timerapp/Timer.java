@@ -118,6 +118,10 @@ public class Timer extends Activity{
 						timerLimit = (numLoopRevision * 2) - 1;
 					}
 					
+					if(totalTime == 0){
+						totalTime = timerValueRevision;
+					}
+					
 					if(timerValueRevision > 0){
 						if(running == false){
 							//Start the timer
@@ -187,7 +191,7 @@ public class Timer extends Activity{
 	//the limit has been reached and displays
 	public static void startNextTimer(int v){
 		//0 = revision, 1 = break
-		if(timerCount < timerLimit){
+		if(timerCount <= timerLimit){
 			if(v == 0){
 				timerCount++;
 				setRevisionTimer(timerValueRevision);
@@ -211,7 +215,7 @@ public class Timer extends Activity{
 			mainButton.setText("Reset");
 			timerCount = 0;
 			timerTextStatus.setText("Timer Ended");
-			running = false;
+			setTimerVariables(false, 2);
 		}
 	}
 	
