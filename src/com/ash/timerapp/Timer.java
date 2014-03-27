@@ -211,6 +211,7 @@ public class Timer extends Activity{
 			mainButton.setText("Reset");
 			timerCount = 0;
 			timerTextStatus.setText("Timer Ended");
+			running = false;
 		}
 	}
 	
